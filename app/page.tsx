@@ -1,95 +1,98 @@
+'use client'
+
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useState, useEffect } from 'react';
+import Checkpoint from "../components/checkpoint";
+import useTime from "../hooks/useTime";
+
+interface CPoint {
+    key: number;
+    id: number;
+    sequenceNumber: number;
+    secounds: number;
+}
+
+var checkpoints = new Array<CPoint>();
+var intervalID: string | number | NodeJS.Timeout | null | undefined;
+var start = 0;
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    const [startTime, setStartTime] = useState(0);
+    const [endTime, setEndTime] = useState(0);
+    const [timeLapse, setTimeLapse] = useState("00:00:00");
+    // const [intervalID, setIntervalID] = useState(0);
+    const { secondsToHms } = useTime();
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+    const addCheckPointEventHandler = () => {
+        let length = checkpoints.length;
+        let timeSpan = 0;
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+        if (length === 0) {
+            timeSpan = (new Date()).getTime()/1000 - start;
+        } else {
+            timeSpan = (new Date()).getTime()/1000 - checkpoints[length-1].secounds;
+        }
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+        let cpoint: CPoint = { 
+            key: length + 1,
+            id: length + 1,
+            sequenceNumber: length + 1,
+            secounds: timeSpan
+        }
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+        checkpoints.push(cpoint);
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+    }
+
+    const startEventHandler = () => {
+        let dateStartTime: Date = new Date();
+        console.log(dateStartTime);
+        console.log("dateStartTime.getTime()/1000: " + dateStartTime.getTime()/1000);
+        let t = dateStartTime.getTime()/1000;
+        setStartTime(t); //getTime returns ms
+        console.log("startTime: " + startTime);
+        start = dateStartTime.getTime()/1000;
+        console.log("start: " + start);
+
+        intervalID = setInterval(repeatingFunctionCallback, 1000);
+    }
+
+    const stopEventHandler = () => {
+        let dateEndTime: Date = new Date();
+        console.log(dateEndTime); //getTime returns ms
+        setEndTime(dateEndTime.getTime()/1000);
+
+        clearInterval(intervalID);
+        intervalID = null;
+    }
+
+    const repeatingFunctionCallback = () => {
+        let currentTime: Date = new Date();
+        let currentSecounds = currentTime.getTime()/1000;
+        let timeLapse = currentSecounds - start;
+        console.log("current secounds: " + currentSecounds);
+        console.log("start time secounds: " + startTime);
+        console.log("start: " + start);
+        setTimeLapse(secondsToHms(timeLapse));
+    }
+
+    return (
+        <main className={styles.main}>
+            <div className={styles.timeLapse}>Time lapse: <span className={styles.spanTimeLapse}>{timeLapse}</span></div>
+            <div className={styles.buttonAddCheckpoint} onClick={addCheckPointEventHandler}>ADD CHECKPOINT</div>
+
+            <div className={styles.checkpoints}>
+                {checkpoints.map((c: any) => (
+                    <Checkpoint key={c.id} id={c.id} sequenceNumber={c.sequenceNumber} secounds={c.secounds} />
+                ))}
+            </div>
+
+            <div className={styles.buttonsContainer}>
+                <div className={styles.buttonStart} onClick={startEventHandler}>START</div>
+                <div className={styles.buttonStop} onClick={stopEventHandler}>STOP</div>
+            </div>
+
+        </main>
+    );
 }
