@@ -11,12 +11,27 @@
     align-items: center;
 }
 
-.timeLapse {
-    font-size: 1.5rem;
+.heading {
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px cornflowerblue;
 }
 
-.spanTimeLapse {
-    /* font-size: 2rem; */
+.fulllTimeContainer, .averageTimeContainer {
+    width: 60%;
+    font-size: 1.5rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /* gap: 1rem; */
+}
+
+.fullTimeText, .averageTimeText {
+    font-weight: bold;
+}
+
+.fullTimeValue, .averageTimeValue {
     font-weight: bold;
 }
 
@@ -42,11 +57,19 @@
     /* background-color: lightskyblue; */
 }
 
+.buttonAddCheckpoint:hover {
+    /* background-color: orange; */
+}
+
+.buttonAddCheckpoint:active {
+    background-color: rgb(44, 107, 224);
+}
+
 .checkpointsGrid {
     /* flex-grow: 1; */
     margin-top: 2rem;
     padding: 0.5rem;
-    width: 80%;
+    width: 100%;
     /* min-height: 5rem; */
     background-color: whitesmoke;
     background-color: white;
@@ -92,10 +115,18 @@
     background-color: rgb(34, 203, 34);
 }
 
+.buttonStart:active {
+    background-color: rgb(24, 123, 24);
+}
+
 .buttonStop {
     margin-left: 1rem;
     background-color: rgb(253, 89, 89);
     background-color: rgb(255, 105, 97);
+}
+
+.buttonStop:Active {
+    background-color: rgb(225, 38, 28);
 }
 
 @media (width < 977px) {
@@ -103,21 +134,38 @@
         padding: 3rem;
     }
 
+    .fulllTimeContainer, .averageTimeContainer {
+        width: 100%;
+        justify-content: space-between;
+    }
+
     .buttonAddCheckpoint {
-        width: 80%;
+        width: 100%;
     }
 
     .checkpoints {
-        width: 80%;
+        /* width: 80%; */
     }
 
     .buttonsContainer {
-        width: 80%;
+        /* width: 80%; */
     }
 }
 
 @media (width < 650px) {
-    .timeLapse {
+    .main {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .fulllTimeContainer, .averageTimeContainer {
         font-size: 1rem;
+    }
+}
+
+@media (width < 400px) {
+    .main {
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 }

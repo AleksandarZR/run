@@ -22,6 +22,7 @@ export default function Home() {
     // const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(0);
     const [timeLapse, setTimeLapse] = useState("00:00:00");
+    const [averageTime, setAverageTime] = useState("00:00:00");
     // const [intervalID, setIntervalID] = useState(0);
     const { secondsToHms } = useTime();
 
@@ -29,15 +30,11 @@ export default function Home() {
         let length = checkpoints.length;
         let timeSpan = 0;
         let currentTime = Math.round((new Date()).getTime() / 1000);
-        console.log(currentTime);
 
         if (length === 0) {
             timeSpan = currentTime - start;
         } else {
             timeSpan = currentTime - checkpoints[length - 1].currentTime;
-
-            console.log("timeSpan: " + timeSpan);
-            console.log("checkpoints[length-1].secounds " + checkpoints[length - 1].secounds);
         }
 
         let cpoint: CPoint = {
@@ -50,13 +47,31 @@ export default function Home() {
 
         checkpoints.push(cpoint);
 
+        calculateAverageTimePerCheckpoint();
+    }
+
+    const calculateAverageTimePerCheckpoint = (): void => {
+        if (checkpoints.length < 1) {
+            return;
+        } else if (checkpoints.length === 1) {
+            setAverageTime(secondsToHms(checkpoints[0].secounds));
+        } else {
+            let sum: number = 0;
+
+            for (let i = 0; i< checkpoints.length; i++ ) {
+                sum = sum + checkpoints[i].secounds;
+            }
+
+            let averageTime: number = sum/checkpoints.length;
+            setAverageTime(secondsToHms(averageTime));
+        }
     }
 
     const startEventHandler = (): void => {
+        reset();
+
         let dateStartTime: Date = new Date();
         start = dateStartTime.getTime() / 1000;
-        console.log("start: " + start);
-        console.log("start: " + Math.round(start));
         start = Math.round(start);
 
         intervalID = setInterval(repeatingFunctionCallback, 1000);
@@ -78,19 +93,42 @@ export default function Home() {
         setTimeLapse(secondsToHms(timeLapse));
     }
 
+    const reset = (): void => {
+        // Delete all checkpoints
+        while (checkpoints.length > 0) {
+            checkpoints.pop();
+        }
+
+        // Reset full time
+        setTimeLapse("00:00:00");
+
+        // Reset average time
+        setAverageTime("00:00:00");
+    }
+
     return (
         <main className={styles.main}>
-            <div className={styles.timeLapse}>Ukupno vreme trčanja: <span className={styles.spanTimeLapse}>{timeLapse}</span></div>
+            <h1 className={styles.heading}>Statistika trčanja</h1>
+
+            <div className={styles.fulllTimeContainer}>
+                <div className={styles.fullTimeText}>Ukupno vreme trčanja:</div>
+                <div className={styles.fullTimeValue}>{timeLapse}</div>
+            </div>
+
+            <div className={styles.averageTimeContainer}>
+                <div className={styles.averageTimeText}>Prosečno vreme po krugu:</div>
+                <div className={styles.averageTimeValue}>{averageTime}</div>
+            </div>
+
             <div className={styles.buttonAddCheckpoint} onClick={addCheckPointEventHandler}>ZAVRŠI KRUG</div>
 
             <div className={styles.checkpointsGrid}>
-               <div className={styles.gridHeader}>
-                   <div className={styles.headerLeft}>Redni broj kruga:</div>
-                    <div className={styles.headerLeft}>Vreme:</div>
-                </div> 
+                <div className={styles.gridHeader}>
+                    <div className={styles.headerLeft}>Redni broj kruga</div>
+                    <div className={styles.headerLeft}>Vreme</div>
+                </div>
                 {checkpoints.map((c: any) => (
                     <Checkpoint key={c.id} id={c.id} sequenceNumber={c.sequenceNumber} secounds={c.secounds} />
-                    // <div key={c.id} className={styles.gridColumn1}>{c.sequenceNumber}</div>
                 ))}
             </div>
 
