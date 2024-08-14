@@ -15,7 +15,7 @@ interface CPoint {
 }
 
 var checkpoints = new Array<CPoint>();
-var intervalID: string | number | NodeJS.Timeout | null | undefined;
+var intervalID: number | undefined | NodeJS.Timeout;
 var start = 0;
 
 export default function Home() {
@@ -68,7 +68,7 @@ export default function Home() {
         setEndTime(dateEndTime.getTime() / 1000);
 
         clearInterval(intervalID);
-        intervalID = null;
+        // intervalID = null;
     }
 
     const repeatingFunctionCallback = (): void => {
