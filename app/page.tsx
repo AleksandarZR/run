@@ -10,6 +10,7 @@ interface CPoint {
     key: number;
     id: number;
     sequenceNumber: number;
+    currentTime: number;
     secounds: number;
 }
 
@@ -18,7 +19,7 @@ var intervalID: string | number | NodeJS.Timeout | null | undefined;
 var start = 0;
 
 export default function Home() {
-    const [startTime, setStartTime] = useState(0);
+    // const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(0);
     const [timeLapse, setTimeLapse] = useState("00:00:00");
     // const [intervalID, setIntervalID] = useState(0);
@@ -27,17 +28,23 @@ export default function Home() {
     const addCheckPointEventHandler = () => {
         let length = checkpoints.length;
         let timeSpan = 0;
+        let currentTime = Math.round((new Date()).getTime() / 1000);
+        console.log(currentTime);
 
         if (length === 0) {
-            timeSpan = (new Date()).getTime()/1000 - start;
+            timeSpan = currentTime - start;
         } else {
-            timeSpan = (new Date()).getTime()/1000 - checkpoints[length-1].secounds;
+            timeSpan = currentTime - checkpoints[length - 1].currentTime;
+
+            console.log("timeSpan: " + timeSpan);
+            console.log("checkpoints[length-1].secounds " + checkpoints[length - 1].secounds);
         }
 
-        let cpoint: CPoint = { 
+        let cpoint: CPoint = {
             key: length + 1,
             id: length + 1,
             sequenceNumber: length + 1,
+            currentTime: currentTime,
             secounds: timeSpan
         }
 
@@ -45,35 +52,29 @@ export default function Home() {
 
     }
 
-    const startEventHandler = () => {
+    const startEventHandler = (): void => {
         let dateStartTime: Date = new Date();
-        console.log(dateStartTime);
-        console.log("dateStartTime.getTime()/1000: " + dateStartTime.getTime()/1000);
-        let t = dateStartTime.getTime()/1000;
-        setStartTime(t); //getTime returns ms
-        console.log("startTime: " + startTime);
-        start = dateStartTime.getTime()/1000;
+        start = dateStartTime.getTime() / 1000;
         console.log("start: " + start);
+        console.log("start: " + Math.round(start));
+        start = Math.round(start);
 
         intervalID = setInterval(repeatingFunctionCallback, 1000);
     }
 
-    const stopEventHandler = () => {
+    const stopEventHandler = (): void => {
         let dateEndTime: Date = new Date();
         console.log(dateEndTime); //getTime returns ms
-        setEndTime(dateEndTime.getTime()/1000);
+        setEndTime(dateEndTime.getTime() / 1000);
 
         clearInterval(intervalID);
         intervalID = null;
     }
 
-    const repeatingFunctionCallback = () => {
+    const repeatingFunctionCallback = (): void => {
         let currentTime: Date = new Date();
-        let currentSecounds = currentTime.getTime()/1000;
+        let currentSecounds = currentTime.getTime() / 1000;
         let timeLapse = currentSecounds - start;
-        console.log("current secounds: " + currentSecounds);
-        console.log("start time secounds: " + startTime);
-        console.log("start: " + start);
         setTimeLapse(secondsToHms(timeLapse));
     }
 
@@ -82,9 +83,14 @@ export default function Home() {
             <div className={styles.timeLapse}>Time lapse: <span className={styles.spanTimeLapse}>{timeLapse}</span></div>
             <div className={styles.buttonAddCheckpoint} onClick={addCheckPointEventHandler}>ADD CHECKPOINT</div>
 
-            <div className={styles.checkpoints}>
+            <div className={styles.checkpointsGrid}>
+                {/* <div className={styles.gridHeader}>
+                   <div className={styles.headerLeft}>Checkpoints</div>
+                    <div className={styles.headerLeft}>Time</div>
+                </div> */}
                 {checkpoints.map((c: any) => (
                     <Checkpoint key={c.id} id={c.id} sequenceNumber={c.sequenceNumber} secounds={c.secounds} />
+                    // <div key={c.id} className={styles.gridColumn1}>{c.sequenceNumber}</div>
                 ))}
             </div>
 
