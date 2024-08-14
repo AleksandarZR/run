@@ -2,7 +2,7 @@
     padding: 6rem;
     min-height: 100vh;
     width: 100%;
-    background-color: var(--background-color);
+    /* background-color: var(--background-color); */
     text-align: center;
 
     display: flex;
@@ -30,11 +30,15 @@
     box-shadow: 5px 5px 7px black;
     font-weight: 700;
     color: rgb(249, 180, 6);
+    color: black;
+    color: white;
     cursor: pointer;
 }
 
 .buttonAddCheckpoint {
-    background-color: rgb(101, 99, 99);
+    background-color: darkgray;
+    background-color: blue;
+    background-color: cornflowerblue;
     /* background-color: lightskyblue; */
 }
 
@@ -44,6 +48,8 @@
     padding: 0.5rem;
     width: 80%;
     background-color: whitesmoke;
+    background-color: white;
+    /* background-color: yellow; */
     border-radius: 5px;
     box-shadow: 5px 5px 7px black;
 
@@ -54,15 +60,21 @@
 }
 
 .gridHeader {
-    grid-area: header;
+    border-bottom: 2px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: bold;
+    /* background-color: var(--lightgreen); */
+    /* grid-area: header; */
 }
 
 .headerLeft {
-    grid-area: headerLeft;
+    /* grid-area: headerLeft; */
 }
 
 .headerRight {
-    grid-area: headerRight;
+    /* grid-area: headerRight; */
 }
 
 .buttonsContainer {
@@ -76,12 +88,13 @@
 
 .buttonStart {
     margin-right: 1rem;
-    background-color: green;
+    background-color: rgb(34, 203, 34);
 }
 
 .buttonStop {
     margin-left: 1rem;
-    background-color: red;
+    background-color: rgb(253, 89, 89);
+    background-color: rgb(255, 105, 97);
 }
 
 @media (width < 977px) {
@@ -99,5 +112,11 @@
 
     .buttonsContainer {
         width: 80%;
+    }
+}
+
+@media (width < 650px) {
+    .timeLapse {
+        font-size: 1rem;
     }
 }

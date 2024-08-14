@@ -80,14 +80,14 @@ export default function Home() {
 
     return (
         <main className={styles.main}>
-            <div className={styles.timeLapse}>Time lapse: <span className={styles.spanTimeLapse}>{timeLapse}</span></div>
-            <div className={styles.buttonAddCheckpoint} onClick={addCheckPointEventHandler}>ADD CHECKPOINT</div>
+            <div className={styles.timeLapse}>Ukupno vreme trčanja: <span className={styles.spanTimeLapse}>{timeLapse}</span></div>
+            <div className={styles.buttonAddCheckpoint} onClick={addCheckPointEventHandler}>ZAVRŠI KRUG</div>
 
             <div className={styles.checkpointsGrid}>
-                {/* <div className={styles.gridHeader}>
-                   <div className={styles.headerLeft}>Checkpoints</div>
-                    <div className={styles.headerLeft}>Time</div>
-                </div> */}
+               <div className={styles.gridHeader}>
+                   <div className={styles.headerLeft}>Redni broj kruga:</div>
+                    <div className={styles.headerLeft}>Vreme:</div>
+                </div> 
                 {checkpoints.map((c: any) => (
                     <Checkpoint key={c.id} id={c.id} sequenceNumber={c.sequenceNumber} secounds={c.secounds} />
                     // <div key={c.id} className={styles.gridColumn1}>{c.sequenceNumber}</div>
