@@ -23,10 +23,15 @@ export default function Home() {
     const [endTime, setEndTime] = useState(0);
     const [timeLapse, setTimeLapse] = useState("00:00:00");
     const [averageTime, setAverageTime] = useState("00:00:00");
+    const [inProgress, setInProgress] = useState(false);
     // const [intervalID, setIntervalID] = useState(0);
     const { secondsToHms } = useTime();
 
     const addCheckPointEventHandler = () => {
+        if (!inProgress) {
+            return;
+        }
+
         let length = checkpoints.length;
         let timeSpan = 0;
         let currentTime = Math.round((new Date()).getTime() / 1000);
@@ -70,6 +75,8 @@ export default function Home() {
     const startEventHandler = (): void => {
         reset();
 
+        setInProgress(true);
+
         let dateStartTime: Date = new Date();
         start = dateStartTime.getTime() / 1000;
         start = Math.round(start);
@@ -78,6 +85,7 @@ export default function Home() {
     }
 
     const stopEventHandler = (): void => {
+        setInProgress(false);
         let dateEndTime: Date = new Date();
         console.log(dateEndTime);
         setEndTime(dateEndTime.getTime() / 1000);
