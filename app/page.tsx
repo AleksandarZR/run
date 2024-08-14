@@ -64,7 +64,7 @@ export default function Home() {
 
     const stopEventHandler = (): void => {
         let dateEndTime: Date = new Date();
-        console.log(dateEndTime); //getTime returns ms
+        console.log(dateEndTime);
         setEndTime(dateEndTime.getTime() / 1000);
 
         clearInterval(intervalID);
