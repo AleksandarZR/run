@@ -16,12 +16,14 @@ interface CPoint {
 
 var checkpoints = new Array<CPoint>();
 var intervalID: number | undefined | NodeJS.Timeout;
+var timeoutID: number | undefined | NodeJS.Timeout;
 var start = 0;
 
 export default function Home() {
     const [timeLapse, setTimeLapse] = useState("00:00:00");
     const [averageTime, setAverageTime] = useState("00:00:00");
     const [inProgress, setInProgress] = useState(false);
+    const [animationOn, setAnimationOn] = useState(false);
     const { secondsToHms } = useTime();
 
     const addCheckPointEventHandler = () => {
@@ -79,6 +81,9 @@ export default function Home() {
         start = Math.round(start);
 
         intervalID = setInterval(repeatingFunctionCallback, 1000);
+
+        setAnimationOn(true);
+        timeoutID = setTimeout(stopAnimation, 3000);
     }
 
     const stopEventHandler = (): void => {
@@ -93,6 +98,10 @@ export default function Home() {
         setTimeLapse(secondsToHms(timeLapse));
     }
 
+    const stopAnimation = (): void => {
+        setAnimationOn(false);
+    }
+
     const reset = (): void => {
         // Delete all checkpoints
         while (checkpoints.length > 0) {
@@ -104,10 +113,19 @@ export default function Home() {
 
         // Reset average time
         setAverageTime("00:00:00");
+
+        // In case "START" is clicked 2 times in a row, before "STOP"
+        if (intervalID) {
+            clearInterval(intervalID);
+        }
     }
 
     return (
         <main className={styles.main}>
+            <div className={animationOn? styles.animationOnStartVisible : styles.animationOnStartHidden}>
+                KRENI
+            </div>
+
             <h1 className={styles.heading}>Statistika trčanja</h1>
 
             <div className={styles.fulllTimeContainer}>
