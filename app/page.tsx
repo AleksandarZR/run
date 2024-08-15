@@ -19,12 +19,9 @@ var intervalID: number | undefined | NodeJS.Timeout;
 var start = 0;
 
 export default function Home() {
-    // const [startTime, setStartTime] = useState(0);
-    const [endTime, setEndTime] = useState(0);
     const [timeLapse, setTimeLapse] = useState("00:00:00");
     const [averageTime, setAverageTime] = useState("00:00:00");
     const [inProgress, setInProgress] = useState(false);
-    // const [intervalID, setIntervalID] = useState(0);
     const { secondsToHms } = useTime();
 
     const addCheckPointEventHandler = () => {
@@ -86,12 +83,7 @@ export default function Home() {
 
     const stopEventHandler = (): void => {
         setInProgress(false);
-        let dateEndTime: Date = new Date();
-        console.log(dateEndTime);
-        setEndTime(dateEndTime.getTime() / 1000);
-
         clearInterval(intervalID);
-        // intervalID = null;
     }
 
     const repeatingFunctionCallback = (): void => {
