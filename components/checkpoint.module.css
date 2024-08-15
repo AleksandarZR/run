@@ -22,14 +22,16 @@
 
 .sequenceNumber {
     font-family: monospace;
-    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 999;
     font-size: 1rem;
     grid-area: column;
 }
 
 .time {
     font-family: monospace;
-    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 999;
     font-size: 1rem;
     grid-area: column;
 }
